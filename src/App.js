@@ -12,7 +12,7 @@ import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
-    <div>
+    <>
       <Router>
         <Header />
         <Routes>
@@ -38,7 +38,7 @@ function App() {
         pauseOnHover
         theme="dark"
       />
-    </div>
+    </>
   );
 }
 
