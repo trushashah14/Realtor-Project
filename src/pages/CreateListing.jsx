@@ -101,7 +101,7 @@ export default function CreateListing() {
       geolocation.lat = data.results[0]?.geometry.location.lat ?? 0;
       geolocation.lng = data.results[0]?.geometry.location.lng ?? 0;
       location = data.status === "ZERO_RESULTS" && undefined;
-      if (location === undefined || location.includes("undefined")) {
+      if (location === undefined) {
         setLoading(false);
         toast.error("Please enter a correct address");
         return;
@@ -161,6 +161,7 @@ export default function CreateListing() {
       imgUrls,
       geolocation,
       timestamp: serverTimestamp(),
+      userRef: auth.currentUser.uid,
     };
     delete formDataCopy.images;
     !formDataCopy.offer && delete formDataCopy.discountedPrice;
@@ -304,7 +305,7 @@ export default function CreateListing() {
           value={address}
           onChange={onChange}
           placeholder="Address"
-          maxLength="32"
+          maxLength="100"
           minLength="10"
           required
           className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 mb-6"
