@@ -16,7 +16,7 @@ import ListingItem from "../components/ListingItem";
 import { db } from "../firebase";
 
 export default function Home() {
-  // Offers
+  // Places that have Offers
   const [offerListings, setOfferListings] = useState(null);
   useEffect(() => {
     async function fetchListings() {
@@ -34,6 +34,7 @@ export default function Home() {
         const querySnap = await getDocs(q);
         const listings = [];
         querySnap.forEach((doc) => {
+          // Add each listing to the array
           return listings.push({
             id: doc.id,
             data: doc.data(),
@@ -46,6 +47,8 @@ export default function Home() {
     }
     fetchListings();
   }, []);
+
+
   // Places for rent
   const [rentListings, setRentListings] = useState(null);
   useEffect(() => {
@@ -64,6 +67,7 @@ export default function Home() {
         const querySnap = await getDocs(q);
         const listings = [];
         querySnap.forEach((doc) => {
+          // Add each listing to the array
           return listings.push({
             id: doc.id,
             data: doc.data(),
@@ -76,7 +80,8 @@ export default function Home() {
     }
     fetchListings();
   }, []);
-  // Places for rent
+
+  // Places for sale
   const [saleListings, setSaleListings] = useState(null);
   useEffect(() => {
     async function fetchListings() {
@@ -94,6 +99,7 @@ export default function Home() {
         const querySnap = await getDocs(q);
         const listings = [];
         querySnap.forEach((doc) => {
+          // Add each listing to the array
           return listings.push({
             id: doc.id,
             data: doc.data(),
@@ -106,6 +112,7 @@ export default function Home() {
     }
     fetchListings();
   }, []);
+
 
   return (
     <div>

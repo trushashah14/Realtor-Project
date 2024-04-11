@@ -12,16 +12,19 @@ import SwiperCore, {
 } from "swiper";
 import "swiper/css/bundle";
 import { useNavigate } from "react-router-dom";
+
+
 export default function Slider() {
-  const [listings, setListings] = useState(null);
-  const [loading, setLoading] = useState(true);
-  SwiperCore.use([Autoplay, Navigation, Pagination]);
-  const navigate = useNavigate();
+  const [listings, setListings] = useState(null); // State for storing listings data
+  const [loading, setLoading] = useState(true); // State for loading state
+  SwiperCore.use([Autoplay, Navigation, Pagination]); // Initialize Swiper core modules
+  const navigate = useNavigate(); // Initialize useNavigate hook for navigation
+
   useEffect(() => {
     async function fetchListings() {
-      const listingsRef = collection(db, "listings");
-      const q = query(listingsRef, orderBy("timestamp", "desc"), limit(5));
-      const querySnap = await getDocs(q);
+      const listingsRef = collection(db, "listings"); // Reference to the "listings" collection
+      const q = query(listingsRef, orderBy("timestamp", "desc"), limit(5)); // Query to get latest 5 listings
+      const querySnap = await getDocs(q); // Get the documents from Firestore
       let listings = [];
       querySnap.forEach((doc) => {
         return listings.push({
@@ -29,17 +32,23 @@ export default function Slider() {
           data: doc.data(),
         });
       });
-      setListings(listings);
-      setLoading(false);
+      setListings(listings); // Set the listings state with the retrieved data
+      setLoading(false); // Set loading state to false after data retrieval
     }
-    fetchListings();
-  }, []);
+    fetchListings(); // Call the fetchListings function on component mount
+  }, []); // Empty dependency array to ensure useEffect runs only once on mount
+
+  // Render Spinner component if data is still loading
   if (loading) {
     return <Spinner />;
   }
+
+  // If there are no listings, return an empty fragment
   if (listings.length === 0) {
     return <></>;
   }
+
+  // Render the Swiper component with slides for each listing
   return (
     listings && (
       <>

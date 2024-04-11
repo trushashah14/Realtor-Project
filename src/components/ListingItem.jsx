@@ -5,20 +5,24 @@ import { MdLocationOn } from "react-icons/md";
 
 import { FaTrash } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
+
+
 export default function ListingItem({ listing, id, onEdit, onDelete }) {
   return (
     <li className="relative bg-white flex flex-col justify-between items-center shadow-md hover:shadow-xl rounded-md overflow-hidden transition-shadow duration-150 m-[10px]">
+       {/* Link to the listing details page */}
       <Link className="contents" to={`/category/${listing.type}/${id}`}>
         <img
           className="h-[170px] w-full object-cover hover:scale-105 transition-scale duration-200 ease-in"
           loading="lazy"
           src={listing.imgUrls[0]}
         />
+        {/* Display listing's timestamp */}
         <Moment
           className="absolute top-2 left-2 bg-[#3377cc] text-white uppercase text-xs font-semibold rounded-md px-2 py-1 shadow-lg"
           fromNow
         >
-          {listing.timestamp?.toDate()}
+          {listing.timestamp?.toDate()} {/* Convert timestamp to Date object */}
         </Moment>
         <div className="w-full p-[10px]">
           <div className="flex items-center space-x-1">

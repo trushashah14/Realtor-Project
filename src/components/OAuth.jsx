@@ -7,34 +7,34 @@ import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 
 export default function OAuth() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Initialize useNavigate hook for navigation
 
   async function onGoogleClick() {
     try {
-      const auth = getAuth();
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
+      const auth = getAuth(); // Get authentication instance
+      const provider = new GoogleAuthProvider(); // Create GoogleAuthProvider instance
+      const result = await signInWithPopup(auth, provider); // Sign in with Google popup
+      const user = result.user; // Get user from authentication result
 
-      // check for the user
+      // Check if the user exists in Firestore
+      const docRef = doc(db, "users", user.uid); // Reference to the user document in Firestore
+      const docSnap = await getDoc(docRef); // Get the document snapshot
 
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-
+      // If user does not exist in Firestore, create a new document
       if (!docSnap.exists()) {
         await setDoc(docRef, {
           name: user.displayName,
           email: user.email,
-          timestamp: serverTimestamp(),
+          timestamp: serverTimestamp(), // Add user's display name, email, and timestamp to Firestore
         });
       }
 
-      navigate("/");
+      navigate("/"); // Navigate to the home page after successful authentication
     } catch (error) {
-      toast.error("Could not authorize with Google");
+      toast.error("Could not authorize with Google"); // Display error toast if authentication fails
     }
   }
-
+  
   return (
     <button
       type="button"

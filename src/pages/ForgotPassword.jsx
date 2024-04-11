@@ -5,11 +5,14 @@ import { toast } from "react-toastify";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 export default function ForgotPassword() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("");  // State to manage email input
+  
+  // Function to update email state on input change
   function onChange(e) {
     setEmail(e.target.value);
   }
 
+  // Function to handle form submission
   async function onSubmit(e) {
     e.preventDefault();
     try {
@@ -21,6 +24,7 @@ export default function ForgotPassword() {
     }
   }
 
+  // Render the Forgot password  form
   return (
     <section>
       <h1 className="text-3xl text-center mt-6 font-bold">Forgot Password</h1>

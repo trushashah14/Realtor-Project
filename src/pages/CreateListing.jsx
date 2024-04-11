@@ -19,6 +19,7 @@ export default function CreateListing() {
   const [geolocationEnabled, setGeolocationEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
+    // Initial state for form data
     type: "rent",
     name: "",
     bedrooms: 1,
@@ -34,6 +35,8 @@ export default function CreateListing() {
     longitude: 0,
     images: {},
   });
+
+  // Destructuring form data
   const {
     type,
     name,
@@ -50,6 +53,8 @@ export default function CreateListing() {
     longitude,
     images,
   } = formData;
+
+    // Function to handle form input changes
 
   function onChange(e) {
     let boolean = null;
@@ -77,9 +82,13 @@ export default function CreateListing() {
     }
   }
 
+    // Function to handle form submission
+
   async function onSubmit(e) {
     e.preventDefault();
     setLoading(true);
+
+    // Validation checks
     if (+discountedPrice >= +regularPrice) {
       setLoading(false);
       toast.error("Discounted Price needs to be less than regular price");
@@ -90,6 +99,8 @@ export default function CreateListing() {
       toast.error("Maximum 6 images are allowed");
       return;
     }
+
+    // Geolocation
     let geolocation = {};
     let location;
     if (geolocationEnabled) {
@@ -111,6 +122,7 @@ export default function CreateListing() {
       geolocation.lng = longitude;
     }
 
+   // Function to upload images to Firebase Storage
     async function storeImage(image) {
       return new Promise((resolve, reject) => {
         const storage = getStorage();
@@ -148,6 +160,8 @@ export default function CreateListing() {
         );
       });
     }
+
+    // Upload images and get their URLs
     const imgUrls = await Promise.all(
       [...images].map((image) => storeImage(image))
     ).catch((error) => {
@@ -156,6 +170,7 @@ export default function CreateListing() {
       return;
     });
 
+    // Prepare form data for Firestore
     const formDataCopy = {
       ...formData,
       imgUrls,
@@ -167,14 +182,18 @@ export default function CreateListing() {
     !formDataCopy.offer && delete formDataCopy.discountedPrice;
     delete formDataCopy.latitude;
     delete formDataCopy.longitude;
+    // Add listing to Firestore
     const docRef = await addDoc(collection(db, "listings"), formDataCopy);
     setLoading(false);
     toast.success("Listing created");
     navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   }
+  // Render spinner if loading
   if (loading) {
     return <Spinner />;
   }
+
+  // Render form
   return (
     <main className="max-w-md px-2 mx-auto">
       <h1 className="text-3xl text-center mt-6 font-bold">Create a listing</h1>

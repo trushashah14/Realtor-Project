@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import { Link, useNavigate } from "react-router-dom";
-import OAuth from "../components/OAuth";
-import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
-import { toast } from "react-toastify";
+import React, { useState } from "react"; // Import React and useState hook
+import { IoMdEye, IoMdEyeOff } from "react-icons/io"; // Import eye icons from react-icons
+import { Link, useNavigate } from "react-router-dom"; // Import Link component and useNavigate hook
+import OAuth from "../components/OAuth"; // Import OAuth component
+import { signInWithEmailAndPassword, getAuth } from "firebase/auth"; // Import functions for Firebase authentication
+import { toast } from "react-toastify"; // Import toast notifications
 
 export default function SignIn() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
+  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
+  const [formData, setFormData] = useState({ // State for form data
     email: "",
     password: "",
   });
-  const { email, password } = formData;
-  const navigate = useNavigate();
+  const { email, password } = formData; // Destructure form data
+  const navigate = useNavigate(); // Get navigation function from react-router-dom
 
-  function onChange(e) {
+  function onChange(e) { // Function to handle form input change
     const { id, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -22,20 +22,20 @@ export default function SignIn() {
     }));
   }
 
-  async function onSubmit(e) {
+  async function onSubmit(e) { // Function to handle form submission
     e.preventDefault();
     try {
-      const auth = getAuth();
-      const userCredential = await signInWithEmailAndPassword(
+      const auth = getAuth(); // Get authentication object from Firebase
+      const userCredential = await signInWithEmailAndPassword( // Sign in user with email and password
         auth,
         email,
         password
       );
-      if (userCredential.user) {
-        navigate("/");
+      if (userCredential.user) { // If user is signed in successfully
+        navigate("/"); // Redirect to home page
       }
     } catch (error) {
-      toast.error("Bad User Credentials");
+      toast.error("Bad User Credentials"); // Display error toast
     }
   }
 
@@ -71,6 +71,7 @@ export default function SignIn() {
                 onChange={onChange}
                 placeholder="Password"
               />
+              {/* Toggle showPassword state */}
               {showPassword ? (
                 <IoMdEyeOff
                   className="absolute right-3 top-3 text-xl cursor-pointer"
@@ -111,7 +112,7 @@ export default function SignIn() {
             <div className="flex my-4 items-center before:border-t before:flex-1  before:border-gray-300 after:border-t after:flex-1  after:border-gray-300">
               <p className="text-center font-semibold mx-4">OR</p>
             </div>
-            <OAuth />
+            <OAuth /> {/* OAuth login buttons */}
           </form>
         </div>
       </div>

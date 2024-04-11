@@ -4,24 +4,33 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
+
 export default function Header() {
+  // State to manage the page state (either "Sign In" or "Profile")
   const [pageState, setPageState] = useState("Sign In");
+  // Get the current location from React Router
   const location = useLocation();
+  // Get the navigate function from React Router
   const navigate = useNavigate();
+  // Get the Firebase authentication instance
   const auth = getAuth();
+
+  // Effect hook to update the page state based on the authentication status
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        setPageState("Profile");
+        setPageState("Profile"); // Set page state to "Profile" if user is authenticated
       } else {
-        setPageState("Sign In");
+        setPageState("Sign In"); // Set page state to "Sign In" if user is not authenticated
       }
     });
-  }, [auth]);
+  }, [auth]); // Run effect when the auth object changes
+
+  // Function to check if the current location matches the specified route
   function pathMatchRoute(route) {
-    // Check if the current location matches the specified route exactly
-    return location.pathname === route;
+    return location.pathname === route; // Returns true if the current location matches the route exactly
   }
+  
   return (
     <div className="bg-white border-b shadow-sm sticky top-0 z-50">
       <header className="flex justify-between items-center px-3 max-w-6xl mx-auto">

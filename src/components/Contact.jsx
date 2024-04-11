@@ -5,22 +5,26 @@ import { toast } from "react-toastify";
 import { db } from "../firebase";
 
 export default function Contact({ userRef, listing }) {
-  const [landlord, setLandlord] = useState(null);
-  const [message, setMessage] = useState("");
+  const [landlord, setLandlord] = useState(null); // State to store landlord data
+  const [message, setMessage] = useState(""); // State to store message content
+
+  // Effect hook to fetch landlord data when userRef changes
   useEffect(() => {
     async function getLandlord() {
-      const docRef = doc(db, "users", userRef);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setLandlord(docSnap.data());
+      const docRef = doc(db, "users", userRef); // Firestore document reference for landlord
+      const docSnap = await getDoc(docRef); // Fetch landlord document
+      if (docSnap.exists()) { // If landlord document exists
+        setLandlord(docSnap.data()); // Set landlord state with fetched data
       } else {
-        toast.error("Could not get landlord data");
+        toast.error("Could not get landlord data"); // Display error message if landlord data cannot be fetched
       }
     }
-    getLandlord();
-  }, [userRef]);
+    getLandlord(); // Invoke function to fetch landlord data
+  }, [userRef]); // Run effect when userRef changes
+
+  // Function to handle message input change
   function onChange(e) {
-    setMessage(e.target.value);
+    setMessage(e.target.value); // Update message state with new value
   }
   return (
     <>

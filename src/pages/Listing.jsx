@@ -25,29 +25,33 @@ import Contact from "../components/Contact";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
 export default function Listing() {
-  const params = useParams();
-  const auth = getAuth();
-  const [listing, setListing] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [shareLinkCopied, setShareLinkCopied] = useState(false);
-  const [contactLandlord, setContactLandlord] = useState(false);
-  SwiperCore.use([Autoplay, Navigation, Pagination]);
+  const params = useParams(); // Get parameters from the URL
+  const auth = getAuth(); // Get authentication object
+  const [listing, setListing] = useState(null); // State for listing data
+  const [loading, setLoading] = useState(true); // State for loading indicator
+  const [shareLinkCopied, setShareLinkCopied] = useState(false); // State for share link copied status
+  const [contactLandlord, setContactLandlord] = useState(false); // State for contact landlord modal
+  SwiperCore.use([Autoplay, Navigation, Pagination]); // Initialize Swiper core and modules
+  
   useEffect(() => {
     async function fetchListing() {
-      const docRef = doc(db, "listings", params.listingId);
-      const docSnap = await getDoc(docRef);
+      const docRef = doc(db, "listings", params.listingId); // Get reference to the listing document
+      const docSnap = await getDoc(docRef); // Get snapshot of the listing document
       if (docSnap.exists()) {
-        setListing(docSnap.data());
-        setLoading(false);
+        setListing(docSnap.data()); // Set listing data if the document exists
+        setLoading(false); // Set loading to false
       }
     }
-    fetchListing();
-  }, [params.listingId]);
+    fetchListing(); // Fetch listing data when component mounts
+  }, [params.listingId]); // Dependency array to re-fetch data when listing ID changes
+
+  // Render loading spinner while data is being fetched
   if (loading) {
     return <Spinner />;
   }
   return (
     <main>
+    {/* Swiper component for image carousel */}
       <Swiper
         slidesPerView={1}
         navigation
@@ -57,6 +61,7 @@ export default function Listing() {
         autoplay={{ delay: 3000 }}
         style={{ height: "40vh" }}
       >
+      {/* Render each image slide */}
         {listing.imgUrls.map((url, index) => (
           <SwiperSlide key={index}>
             <div
@@ -69,24 +74,27 @@ export default function Listing() {
           </SwiperSlide>
         ))}
       </Swiper>
+      {/* Button to copy share link */}
       <div
         className="fixed top-[10%] right-[3%] z-10 bg-white cursor-pointer border-2 border-gray-400 rounded-full w-12 h-12 flex justify-center items-center md:w-10 md:h-10"
         onClick={() => {
-          navigator.clipboard.writeText(window.location.href);
-          setShareLinkCopied(true);
+          navigator.clipboard.writeText(window.location.href); // Copy URL to clipboard
+          setShareLinkCopied(true); // Set share link copied status to true
           setTimeout(() => {
-            setShareLinkCopied(false);
+            setShareLinkCopied(false); // Reset share link copied status after 2 seconds
           }, 2000);
         }}
       >
         <FaShare className="text-lg text-slate-500" />
       </div>
+      {/* Display share link copied message */}
       {shareLinkCopied && (
         <p className="fixed top-[23%] right-[5%] font-semibold border-2 border-gray-400 rounded-md bg-white z-10 p-2">
           Link Copied
         </p>
       )}
 
+{/* Listing details */}
       <div className="m-4 flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg shadow-lg bg-white lg:space-x-5  h-40vh">
         <div className=" w-full">
           <p className="text-2xl font-bold mb-3 text-blue-900">

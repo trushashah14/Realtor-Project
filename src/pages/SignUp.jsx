@@ -13,47 +13,48 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function SignUp() {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({ // State for form data
     name: "",
     email: "",
     password: "",
   });
-  const { email, password, name } = formData;
-  const navigate = useNavigate();
-  function onChange(e) {
+  const { email, password, name } = formData; // Destructure form data
+  const navigate = useNavigate(); // Get navigation function from react-router-dom
+
+  function onChange(e) { // Function to handle form input change
     const { id, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
       [id]: value,
     }));
   }
-
-  async function onSubmit(e) {
+  async function onSubmit(e) { // Function to handle form submission
     e.preventDefault();
 
     try {
-      const auth = getAuth();
-      const userCredential = await createUserWithEmailAndPassword(
+      const auth = getAuth(); // Get authentication object from Firebase
+      const userCredential = await createUserWithEmailAndPassword( // Create user with email and password
         auth,
         email,
         password
       );
-      updateProfile(auth.currentUser, {
+      updateProfile(auth.currentUser, { // Update user profile with display name
         displayName: name,
       });
       const user = userCredential.user;
       const formDataCopy = { ...formData };
       delete formDataCopy.password;
-      formDataCopy.timestamp = serverTimestamp();
+      formDataCopy.timestamp = serverTimestamp(); // Add timestamp to form data
 
-      await setDoc(doc(db, "users", user.uid), formDataCopy);
-      navigate("/");
+      await setDoc(doc(db, "users", user.uid), formDataCopy); // Set document in Firestore with user data
+      navigate("/"); // Redirect to home page
     } catch (error) {
-      toast.error("Something went wrong with the registration");
+      toast.error("Something went wrong with the registration"); // Display error toast
     }
   }
+
   return (
     <section>
       <h1 className="text-3xl text-center mt-6 font-bold">Sign Up</h1>

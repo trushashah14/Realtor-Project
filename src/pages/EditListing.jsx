@@ -25,6 +25,7 @@ export default function EditListing() {
   const [loading, setLoading] = useState(false);
   const [listing, setListing] = useState(null);
 
+  // Initial state for form data
   const [formData, setFormData] = useState({
     type: "rent",
     name: "",
@@ -41,6 +42,8 @@ export default function EditListing() {
     longitude: 0,
     images: {},
   });
+  
+  // Destructure form data
   const {
     type,
     name,
@@ -57,8 +60,11 @@ export default function EditListing() {
     longitude,
     images,
   } = formData;
+
+  // Get URL parameters
   const params = useParams();
 
+  // Check if the current user can edit the listing
   useEffect(() => {
     if (listing && listing.userRef !== auth.currentUser.uid) {
       toast.error("You can't edit this listing");
@@ -66,7 +72,7 @@ export default function EditListing() {
     }
   }, [auth.currentUser.uid, listing, navigate]);
 
-
+ // Fetch the listing data from Firestore
   useEffect(() => {
     setLoading(true);
     async function fetchListing() {
@@ -84,6 +90,7 @@ export default function EditListing() {
     fetchListing();
   }, [navigate,params.listingId]);
 
+  // Handle form input changes
   function onChange(e) {
     let boolean = null;
     if (e.target.value === "true") {
@@ -110,15 +117,19 @@ export default function EditListing() {
     }
   }
 
+  // Handle form submission
   async function onSubmit(e) {
     e.preventDefault();
     setLoading(true);
+
+    // Validate discounted price
     if (+discountedPrice >= +regularPrice) {
       setLoading(false);
       toast.error("Discounted Price needs to be less than regular price");
       return;
     }
 
+    // Geolocation
     let geolocation = {};
     let location;
     if (geolocationEnabled) {
@@ -140,6 +151,7 @@ export default function EditListing() {
       geolocation.lng = longitude;
     }
 
+    // Function to store uploaded images in Firebase Storage
     async function storeImage(image) {
       return new Promise((resolve, reject) => {
         const storage = getStorage();
@@ -149,6 +161,7 @@ export default function EditListing() {
         uploadTask.on(
           "state_changed",
           (snapshot) => {
+            // Handle upload state changes
             // Observe state change events such as progress, pause, and resume
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             const progress =
@@ -178,6 +191,7 @@ export default function EditListing() {
       });
     }
 
+    // Upload images and get their download URLs
     let newImgUrls = [];
     if (images && images.length > 0) {
       if (images.length > 6) {
@@ -195,6 +209,7 @@ export default function EditListing() {
     }
     const updatedImgUrls = [...(listing?.imgUrls ?? []), ...newImgUrls];
 
+    // Prepare form data to be updated in Firestore
     const formDataCopy = {
       ...formData,
       imgUrls: updatedImgUrls,
@@ -212,9 +227,13 @@ export default function EditListing() {
     toast.success("Listing Edited");
     navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   }
+
+  // Render loading spinner while data is loading
   if (loading) {
     return <Spinner />;
   }
+
+  // Render the edit listing form
   return (
     <main className="max-w-md px-2 mx-auto">
       <h1 className="text-3xl text-center mt-6 font-bold">Edit listing</h1>
