@@ -22,7 +22,7 @@ export default function ListingItem({ listing, id, onEdit, onDelete }) {
           className="absolute top-2 left-2 bg-[#3377cc] text-white uppercase text-xs font-semibold rounded-md px-2 py-1 shadow-lg"
           fromNow
         >
-          {listing.timestamp?.toDate()} {/* Convert timestamp to Date object */}
+          {listing.timestamp?.toDate()}
         </Moment>
         <div className="w-full p-[10px]">
           <div className="flex items-center space-x-1">
