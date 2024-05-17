@@ -48,7 +48,7 @@ This will start the development server and open the application in your browser 
 ## Live Demo
 The live demo of the deployed application can be accessed through the following link:
 
-[Live Demo URL](realtor-project-app.vercel.app)
+[Live Demo URL](https://realtor-project-app.vercel.app)
 
 #### Additional Notes
 This Readme provides a basic overview. Refer to the codebase for further details and configuration options.
