@@ -46,7 +46,7 @@ npm start  # or yarn start
 This will start the development server and open the application in your browser (usually at http://localhost:3000).
 
 ## Live Demo
-The live demo of the deployed application can be accessed through the following link (replace with your actual deployment URL):
+The live demo of the deployed application can be accessed through the following link:
 
 [Live Demo URL](realtor-project-app.vercel.app)
 
